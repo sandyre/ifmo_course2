@@ -30,7 +30,7 @@ void Interpolation::FillWithData(std::function<double(double)> fx)
     this->source_datasets.push_back(second);
 
     DataSet third;
-    for(double i = LEFTBOUND*5; i < RIGHTBOUND*5; i+=10)
+    for(double i = LEFTBOUND*3; i < RIGHTBOUND*3; i+=10)
     {
         third.x.push_back(i);
         third.y.push_back(fx(i));
@@ -45,8 +45,9 @@ DataSet Interpolation::NewtonGetDataSet(DataSet input_dataset, double leftbound,
 {
     DataSet result;
     result.lenght = N;
-    double unknown_x = leftbound;
-    double step = (double)((abs(leftbound) + abs(rightbound))/(double)N*1.0);
+    double unknown_x = input_dataset.x[0];
+    double step = (double)((abs(input_dataset.x[0]) +
+                           abs(input_dataset.x[input_dataset.lenght-1]))/(double)N*1.0);
     double F, den, res;
     for(auto iter = 0; iter < N; iter++)
     {

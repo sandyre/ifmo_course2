@@ -23,6 +23,7 @@
       <height>501</height>
      </rect>
     </property>
+    <zorder>gridLayoutWidget</zorder>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
@@ -30,7 +31,7 @@
       <x>670</x>
       <y>0</y>
       <width>211</width>
-      <height>131</height>
+      <height>491</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -85,6 +86,65 @@
          </property>
          <property name="checked">
           <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Data table</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_2">
+         <item>
+          <property name="text">
+           <string>graph 1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>graph 2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>graph 3</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="datatable">
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="showGrid">
+          <bool>true</bool>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string>x</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>f(x)</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Set graphic's data</string>
          </property>
         </widget>
        </item>

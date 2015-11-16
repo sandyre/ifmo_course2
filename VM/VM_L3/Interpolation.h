@@ -12,7 +12,6 @@ struct DataSet
 
     DataSet(QVector<double> x_, QVector<double> y_)
     {
-        // if(x_.size() != y_.size())
         lenght = x_.size();
         x = x_;
         y = y_;

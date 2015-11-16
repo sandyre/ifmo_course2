@@ -11,7 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->setupCustomPlot();
     this->CreateOriginalGraph(DOTCOUNT, qSin);
+    this->GenerateData(qSin);
     this->DrawInterpolationLines(qSin);
+    this->viewDataTable(0);
+    this->viewLegend();
     ui->customplot->replot();
 }
 
@@ -59,22 +62,28 @@ void MainWindow::setupCustomPlot()
 void MainWindow::CreateOriginalGraph(int el_count, std::function<double(double)> fx)
 {
     QVector<double> x, y;
-    double h = (ui->customplot->xAxis->range().size())/(double)el_count;
+    double h = (abs(LEFTBOUND) + abs(RIGHTBOUND))/(double)el_count;
     for(int i = -el_count/2; i <= el_count/2; i++)
     {
         x.push_back(i*h);
         y.push_back(fx(i*h));
     }
     ui->customplot->addGraph();
+    ui->customplot->graph(0)->setName("real f(x)");
     ui->customplot->graph(0)->setData(x,y);
     ui->customplot->graph(0)->setPen(QPen(Qt::white));
 }
 
-void MainWindow::DrawInterpolationLines(std::function<double(double)> fx)
+void MainWindow::GenerateData(std::function<double(double)> fx)
 {
     inter.FillWithData(fx);
     inter.CalculateDatasetsFromSources();
+}
+
+void MainWindow::DrawInterpolationLines(std::function<double(double)> fx)
+{
     ui->customplot->addGraph();
+    ui->customplot->graph(1)->setName("inter. f(x) #1");
     ui->customplot->graph(1)->setPen(QPen(Qt::red));
     ui->customplot->graph(1)->setData(inter.calculated_datasets[0].x,
             inter.calculated_datasets[0].y);
@@ -86,6 +95,7 @@ void MainWindow::DrawInterpolationLines(std::function<double(double)> fx)
     ui->customplot->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 5));
 
     ui->customplot->addGraph();
+    ui->customplot->graph(3)->setName("inter. f(x) #2");
     ui->customplot->graph(3)->setPen(QPen(Qt::green));
     ui->customplot->graph(3)->setData(inter.calculated_datasets[1].x,
             inter.calculated_datasets[1].y);
@@ -97,6 +107,7 @@ void MainWindow::DrawInterpolationLines(std::function<double(double)> fx)
     ui->customplot->graph(4)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 5));
 
     ui->customplot->addGraph();
+    ui->customplot->graph(5)->setName("inter. f(x) #3");
     ui->customplot->graph(5)->setPen(QPen(Qt::magenta));
     ui->customplot->graph(5)->setData(inter.calculated_datasets[2].x,
             inter.calculated_datasets[2].y);
@@ -106,6 +117,18 @@ void MainWindow::DrawInterpolationLines(std::function<double(double)> fx)
             inter.source_datasets[2].y);
     ui->customplot->graph(6)->setLineStyle(QCPGraph::LineStyle::lsNone);
     ui->customplot->graph(6)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 5));
+
+    this->viewLegend();
+}
+
+void MainWindow::viewLegend()
+{
+    ui->customplot->legend->removeAt(2);
+    ui->customplot->legend->removeAt(4);
+    ui->customplot->legend->removeAt(6);
+
+    ui->customplot->legend->setBrush(QBrush(Qt::gray));
+    ui->customplot->legend->setVisible(true);
 }
 
 void MainWindow::on_checkBox_stateChanged(int arg1)
@@ -172,6 +195,61 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
     switch(index)
     {
         case 0:
+            GenerateData(qSin);
+            CreateOriginalGraph(DOTCOUNT, qSin);
+            DrawInterpolationLines(qSin);
+            break;
+        case 1:
+            GenerateData(qCos);
+            CreateOriginalGraph(DOTCOUNT, qCos);
+            DrawInterpolationLines(qCos);
+            break;
+        case 2:
+            GenerateData(qTan);
+            CreateOriginalGraph(DOTCOUNT, qTan);
+            DrawInterpolationLines(qTan);
+            break;
+    }
+    ui->customplot->repaint();
+}
+
+void MainWindow::on_comboBox_2_currentIndexChanged(int index)
+{
+    this->viewDataTable(index);
+}
+
+void MainWindow::viewDataTable(int index)
+{
+    ui->datatable->setColumnWidth(0, 50);
+    ui->datatable->setColumnCount(2);
+    ui->datatable->setRowCount(inter.source_datasets[index].lenght);
+
+    for(auto j = 0; j < inter.source_datasets[index].lenght; j++)
+    {
+        QTableWidgetItem *x = new QTableWidgetItem(QString("%1").arg(inter.source_datasets[index].x[j]));
+        QTableWidgetItem *y = new QTableWidgetItem(QString("%1").arg(inter.source_datasets[index].y[j]));
+        ui->datatable->setItem(j, 0, x);
+        ui->datatable->setItem(j, 1, y);
+    }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    int index = ui->comboBox_2->currentIndex();
+    for(auto i = 0; i < inter.source_datasets[index].lenght; i++)
+    {
+        inter.source_datasets[index].x[i] = ui->datatable->item(i, 0)->text().toDouble();
+        inter.source_datasets[index].y[i] = ui->datatable->item(i, 1)->text().toDouble();
+    }
+
+    inter.calculated_datasets.clear();
+    inter.CalculateDatasetsFromSources();
+    ui->customplot->clearGraphs();
+
+    int function = ui->comboBox->currentIndex();
+    switch(function)
+    {
+        case 0:
             CreateOriginalGraph(DOTCOUNT, qSin);
             DrawInterpolationLines(qSin);
             break;
@@ -184,5 +262,10 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
             DrawInterpolationLines(qTan);
             break;
     }
+
+    ui->checkBox->setChecked(true);
+    ui->checkBox_2->setChecked(true);
+    ui->checkBox_3->setChecked(true);
+    ui->checkBox_4->setChecked(true);
     ui->customplot->repaint();
 }
