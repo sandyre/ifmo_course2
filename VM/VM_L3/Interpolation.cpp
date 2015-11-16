@@ -40,14 +40,14 @@ void Interpolation::FillWithData(std::function<double(double)> fx)
     this->source_datasets.push_back(third);
 }
 
-DataSet Interpolation::NewtonGetDataSet(DataSet input_dataset, double leftbound,
-                                        double rightbound, int N)
+DataSet Interpolation::NewtonGetDataSet(DataSet input_dataset, int N)
 {
+    auto f = input_dataset.y;
     DataSet result;
     result.lenght = N;
     double unknown_x = input_dataset.x[0];
-    double step = (double)((abs(input_dataset.x[0]) +
-                           abs(input_dataset.x[input_dataset.lenght-1]))/(double)N*1.0);
+    double step = (std::abs(input_dataset.x[0]) +
+                           std::abs(input_dataset.x[input_dataset.lenght-1]))/N;
     double F, den, res;
     for(auto iter = 0; iter < N; iter++)
     {
@@ -67,6 +67,7 @@ DataSet Interpolation::NewtonGetDataSet(DataSet input_dataset, double leftbound,
             for(auto k = 0; k < i; k++) F *= (unknown_x - input_dataset.x[k]);
             res += F;
         }
+
         result.x.push_back(unknown_x);
         result.y.push_back(res);
 
@@ -94,26 +95,21 @@ double Interpolation::NewtonGetInterpolationResult(int index, double x)
 {
     double result = source_datasets[index].y[0];
     double unknown_x = x;
-//    double step = (double)((abs(source_datasets[index].x[0]) +
-//                           abs(source_datasets[index].x[source_datasets[index].lenght-1]))/(double)N*1.0);
     double F, den;
-    for(auto iter = 0; iter < 1; iter++)
+    for(auto i = 1; i < source_datasets[index].lenght; i++)
     {
-        for(auto i = 1; i < source_datasets[index].lenght; i++)
+        F = 0;
+        for(auto j = 0; j <= i; j++)
         {
-            F = 0;
-            for(auto j = 0; j <= i; j++)
+            den = 1;
+            for(auto k = 0; k <= i; k++)
             {
-                den = 1;
-                for(auto k = 0; k <= i; k++)
-                {
-                    if(k != j) den *= (source_datasets[index].x[j] - source_datasets[index].x[k]);
-                }
-                F += source_datasets[index].y[j] / den;
+                if(k != j) den *= (source_datasets[index].x[j] - source_datasets[index].x[k]);
             }
-            for(auto k = 0; k < i; k++) F *= (unknown_x - source_datasets[index].x[k]);
-            result += F;
+            F += source_datasets[index].y[j] / den;
         }
+        for(auto k = 0; k < i; k++) F *= (unknown_x - source_datasets[index].x[k]);
+        result += F;
     }
     return result;
 }

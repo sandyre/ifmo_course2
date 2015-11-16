@@ -51,8 +51,7 @@ public:
     void FillWithData(std::function<double(double)> fx = sin);
     void ClearData();
 
-    DataSet NewtonGetDataSet(DataSet input_dataset, double leftbound = LEFTBOUND,
-                             double rightbound = RIGHTBOUND, int N = DOTCOUNT);
+    DataSet NewtonGetDataSet(DataSet input_dataset, int N = DOTCOUNT);
 
     double NewtonGetInterpolationResult(int index, double x);
     void CalculateDatasetsFromSources();

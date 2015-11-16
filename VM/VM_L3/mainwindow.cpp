@@ -210,7 +210,28 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
             DrawInterpolationLines(qTan);
             break;
     }
-    ui->customplot->repaint();
+
+    if(ui->checkBox->isChecked())
+    {
+        ui->customplot->graph(1)->setVisible(true);
+        ui->customplot->graph(2)->setVisible(true);
+    }
+    if(ui->checkBox_2->isChecked())
+    {
+        ui->customplot->graph(3)->setVisible(true);
+        ui->customplot->graph(4)->setVisible(true);
+    }
+    if(ui->checkBox_3->isChecked())
+    {
+        ui->customplot->graph(5)->setVisible(true);
+        ui->customplot->graph(6)->setVisible(true);
+    }
+    if(ui->checkBox_4->isChecked())
+    {
+        ui->customplot->graph(0)->setVisible(true);
+    }
+
+    ui->customplot->replot();
 }
 
 void MainWindow::on_comboBox_2_currentIndexChanged(int index)
@@ -263,11 +284,27 @@ void MainWindow::on_pushButton_clicked()
             break;
     }
 
-    ui->checkBox->setChecked(true);
-    ui->checkBox_2->setChecked(true);
-    ui->checkBox_3->setChecked(true);
-    ui->checkBox_4->setChecked(true);
-    ui->customplot->repaint();
+    // after repaint, check if graphics should be displayed
+    if(ui->checkBox->isChecked())
+    {
+        ui->customplot->graph(1)->setVisible(true);
+        ui->customplot->graph(2)->setVisible(true);
+    }
+    if(ui->checkBox_2->isChecked())
+    {
+        ui->customplot->graph(3)->setVisible(true);
+        ui->customplot->graph(4)->setVisible(true);
+    }
+    if(ui->checkBox_3->isChecked())
+    {
+        ui->customplot->graph(5)->setVisible(true);
+        ui->customplot->graph(6)->setVisible(true);
+    }
+    if(ui->checkBox_4->isChecked())
+    {
+        ui->customplot->graph(0)->setVisible(true);
+    }
+    ui->customplot->replot();
 }
 
 void MainWindow::on_pushButton_2_clicked()
