@@ -89,3 +89,31 @@ void Interpolation::ClearData()
     this->calculated_datasets.clear();
     this->source_datasets.clear();
 }
+
+double Interpolation::NewtonGetInterpolationResult(int index, double x)
+{
+    double result = source_datasets[index].y[0];
+    double unknown_x = x;
+//    double step = (double)((abs(source_datasets[index].x[0]) +
+//                           abs(source_datasets[index].x[source_datasets[index].lenght-1]))/(double)N*1.0);
+    double F, den;
+    for(auto iter = 0; iter < 1; iter++)
+    {
+        for(auto i = 1; i < source_datasets[index].lenght; i++)
+        {
+            F = 0;
+            for(auto j = 0; j <= i; j++)
+            {
+                den = 1;
+                for(auto k = 0; k <= i; k++)
+                {
+                    if(k != j) den *= (source_datasets[index].x[j] - source_datasets[index].x[k]);
+                }
+                F += source_datasets[index].y[j] / den;
+            }
+            for(auto k = 0; k < i; k++) F *= (unknown_x - source_datasets[index].x[k]);
+            result += F;
+        }
+    }
+    return result;
+}

@@ -269,3 +269,11 @@ void MainWindow::on_pushButton_clicked()
     ui->checkBox_4->setChecked(true);
     ui->customplot->repaint();
 }
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    int index = ui->comboBox_2->currentIndex();
+    QString input_x = ui->lineEdit_2->text();
+    double answer = inter.NewtonGetInterpolationResult(index,input_x.toDouble());
+    ui->lineEdit->setText(QString::number(answer));
+}

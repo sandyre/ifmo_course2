@@ -54,6 +54,7 @@ public:
     DataSet NewtonGetDataSet(DataSet input_dataset, double leftbound = LEFTBOUND,
                              double rightbound = RIGHTBOUND, int N = DOTCOUNT);
 
+    double NewtonGetInterpolationResult(int index, double x);
     void CalculateDatasetsFromSources();
     QVector<DataSet> source_datasets;
     QVector<DataSet> calculated_datasets;
