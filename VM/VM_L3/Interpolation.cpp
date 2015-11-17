@@ -1,5 +1,6 @@
 #include "Interpolation.h"
 #include <QtMath>
+#include <QDebug>
 
 Interpolation::Interpolation()
 {
@@ -10,7 +11,7 @@ void Interpolation::FillWithData(std::function<double(double)> fx)
     this->ClearData();
 
     DataSet first;
-    for(double i = LEFTBOUND; i < RIGHTBOUND; i+=2.5)
+    for(double i = 0; i <= 2*M_PI; i+=M_PI_2)
     {
         first.x.push_back(i);
         first.y.push_back(fx(i));
@@ -20,7 +21,7 @@ void Interpolation::FillWithData(std::function<double(double)> fx)
     this->source_datasets.push_back(first);
 
     DataSet second;
-    for(double i = LEFTBOUND; i < RIGHTBOUND; i++)
+    for(double i = 0; i <= 2*M_PI; i+=M_PI_4)
     {
         second.x.push_back(i);
         second.y.push_back(fx(i));
@@ -30,7 +31,7 @@ void Interpolation::FillWithData(std::function<double(double)> fx)
     this->source_datasets.push_back(second);
 
     DataSet third;
-    for(double i = LEFTBOUND*3; i < RIGHTBOUND*3; i+=10)
+    for(double i = 0; i <= M_PI*50; i+=M_PI*5)
     {
         third.x.push_back(i);
         third.y.push_back(fx(i));
@@ -38,16 +39,46 @@ void Interpolation::FillWithData(std::function<double(double)> fx)
     }
 
     this->source_datasets.push_back(third);
+
+//    DataSet first;
+//    for(double i = LEFTBOUND; i <= RIGHTBOUND; i+=2.5)
+//    {
+//        first.x.push_back(i);
+//        first.y.push_back(fx(i));
+//        first.lenght++;
+//    }
+
+//    this->source_datasets.push_back(first);
+
+//    DataSet second;
+//    for(double i = LEFTBOUND; i <= RIGHTBOUND; i+=1.0)
+//    {
+//        second.x.push_back(i);
+//        second.y.push_back(fx(i));
+//        second.lenght++;
+//    }
+
+//    this->source_datasets.push_back(second);
+
+//    DataSet third;
+//    for(double i = LEFTBOUND*5; i <= RIGHTBOUND*5; i+=10)
+//    {
+//        third.x.push_back(i);
+//        third.y.push_back(fx(i));
+//        third.lenght++;
+//    }
+
+//    this->source_datasets.push_back(third);
 }
 
 DataSet Interpolation::NewtonGetDataSet(DataSet input_dataset, int N)
 {
-    auto f = input_dataset.y;
     DataSet result;
     result.lenght = N;
     double unknown_x = input_dataset.x[0];
     double step = (std::abs(input_dataset.x[0]) +
                            std::abs(input_dataset.x[input_dataset.lenght-1]))/N;
+
     double F, den, res;
     for(auto iter = 0; iter < N; iter++)
     {
@@ -64,7 +95,9 @@ DataSet Interpolation::NewtonGetDataSet(DataSet input_dataset, int N)
                 }
                 F += input_dataset.y[j] / den;
             }
-            for(auto k = 0; k < i; k++) F *= (unknown_x - input_dataset.x[k]);
+            // den = n! * h ^ n
+            for(auto k = 0; k < i; k++)
+                F *= (unknown_x - input_dataset.x[k]); // * (x - x0)(x - x1)..
             res += F;
         }
 

@@ -59,14 +59,28 @@ void MainWindow::setupCustomPlot()
     ui->customplot->yAxis->setLabelColor(Qt::white);
 }
 
+//void MainWindow::CreateOriginalGraph(int el_count, std::function<double(double)> fx)
+//{
+//    QVector<double> x, y;
+//    double h = (abs(LEFTBOUND*5) + abs(RIGHTBOUND*5))/(double)el_count;
+//    for(int i = -el_count/2; i <= el_count/2; i++)
+//    {
+//        x.push_back(i*h);
+//        y.push_back(fx(i*h));
+//    }
+//    ui->customplot->addGraph();
+//    ui->customplot->graph(0)->setName("real f(x)");
+//    ui->customplot->graph(0)->setData(x,y);
+//    ui->customplot->graph(0)->setPen(QPen(Qt::white));
+//}
 void MainWindow::CreateOriginalGraph(int el_count, std::function<double(double)> fx)
 {
     QVector<double> x, y;
-    double h = (abs(LEFTBOUND) + abs(RIGHTBOUND))/(double)el_count;
-    for(int i = -el_count/2; i <= el_count/2; i++)
+    double h = (LEFTBOUND + RIGHTBOUND)/(double)el_count;
+    for(double i = LEFTBOUND; i <= RIGHTBOUND; i+=h)
     {
-        x.push_back(i*h);
-        y.push_back(fx(i*h));
+        x.push_back(i);
+        y.push_back(fx(i));
     }
     ui->customplot->addGraph();
     ui->customplot->graph(0)->setName("real f(x)");

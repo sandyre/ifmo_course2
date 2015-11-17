@@ -46,7 +46,6 @@
       <height>501</height>
      </rect>
     </property>
-    <zorder>gridLayoutWidget</zorder>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
@@ -252,11 +251,6 @@
          <item>
           <property name="text">
            <string>cos(x)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>tg(x)</string>
           </property>
          </item>
         </widget>
