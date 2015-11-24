@@ -9,11 +9,11 @@ code segment para public 'code'
 ; +8  bx
 ; +6  cx
 ; +4  dx
-; +2  di   
+; +2  di
 ; +0  bp <- sp
 
 ; bool wordToChar(int value, char* output_str)
-public wordToChar 
+public wordToChar
 wordToChar proc
 prepare_for_execution:
     push si
@@ -22,7 +22,7 @@ prepare_for_execution:
     push dx
     push di
     push bp
-    
+
     mov bp, sp ; bp now pointers on sp
     mov ax, [bp + 16] ; value
     test ax, ax
@@ -64,7 +64,7 @@ reestablish_registers_and_exit:
     pop cx
     pop bx
     pop si
-    
+
     ret
 wordToChar endp
 
@@ -85,18 +85,18 @@ writeToFile proc
     push cx
     push dx
     push bp
-    
+
     mov bp, sp
-    
+
     mov ah, 3Dh ; openfile
     mov al, 1h
     mov dx, [bp + 16]
     int 21h
     jc ErrorWriteToFile
-    
+
     mov bx, [bp + 14]
     mov [bx], ax
-    
+
     mov ah, 40h
     mov bx, [bp + 14]
     mov bx, [bx]
@@ -104,11 +104,11 @@ writeToFile proc
     mov dx, [bp + 12]
     int 21h
     jc ErrorWriteToFile
-    
+
     mov ah, 3Eh
     mov bx, [bp + 14]
     mov bx, [bx]
-    int 21h   
+    int 21h
     jc ErrorWriteToFile
     jmp SuccessWriteToFile
 ErrorWriteToFile:
@@ -141,7 +141,7 @@ readStr proc
     push dx
     push bp
     mov bp, sp
-    
+
     ; cursor setting code;
     mov dh, [bp + 12] ; line
     mov dl, [bp + 10] ; column
@@ -149,28 +149,28 @@ readStr proc
     mov ah, 2
     int 10h
     ; end of cursor setting code;
-    
+
     xor dx, dx
     xor bx, bx
     xor cx, cx
     mov cx, 0
-    
+
     mov bx, [bp + 16]
     ; reading string code ;
 get_char:
     mov ah, 01h
     int 21h
-    
+
     cmp al, 13
     je readStr_end
-    
+
     mov ah, 0
     inc cx ; size counter++
     mov [bx], ax
     inc bx
     jmp get_char
     ; end of reading string code ;
-    
+
     ; restore regiters
 readStr_end:
     mov bx, [bp + 14]
@@ -196,14 +196,14 @@ strToWord proc
 	push bx
 	push cx
 	push dx
-	push bp	
-        push si				
-	
-	mov bp, sp 			
-	
-	mov cx, [bp + 14] ; size	
+	push bp
+        push si
+
+	mov bp, sp
+
+	mov cx, [bp + 14] ; size
 	mov bx, [bp + 12] ; stringptr
-	
+
 	xor ax, ax
         mov dl, byte ptr[bx]
         cmp dl, '-'
@@ -211,31 +211,31 @@ strToWord proc
         mov si, 2
         inc bx
         dec cx
-procloop:					
-	mov dx, 10				
-	mul dx					
+procloop:
+	mov dx, 10
+	mul dx
 	cmp dx, 0
 	jne incorrectStrToWord
-	
+
 	mov dl, byte ptr [bx]
 	cmp dl, '0'
 	jl incorrectStrToWord
 	cmp dl, '9'
-	jg incorrectStrToWord	
-	
-	add al, dl 	
+	jg incorrectStrToWord
+
+	add al, dl
 	jc incorrectStrToWord
-	
+
 	sub al, '0'
-	
-	inc bx 
-	loop procloop 
+
+	inc bx
+	loop procloop
 	jmp correctStrToWord
 
 incorrectStrToWord:
 	mov ax, 1
 	jmp exitStrToWord
-correctStrToWord: 
+correctStrToWord:
 	; sending result
         cmp si, 2
         je  its_negative
@@ -248,84 +248,14 @@ its_negative:
         mov bx, [bp + 16]
 	mov [bx], ax
 	mov ax, 0
-	jmp exitStrToWord	
+	jmp exitStrToWord
 exitStrToWord:
         pop si
 	pop bp
 	pop dx
 	pop cx
 	pop bx
-	ret 
+	ret
 strToWord endp
-
-; wordaddress +16
-; stringsize +14
-; stringaddress +12
-; ret +10
-; bx +8
-; cx +6
-; dx +4
-; bp +2
-; si +0
-public strToWord1
-strToWord1 proc
-    push bx
-    push cx
-    push dx
-    push bp
-    push si
-    
-    mov bp, sp
-    xor cx, cx
-    
-    mov ax, 0 ; accumulator
-    mov cx, [bp + 14]
-    
-    mov bx, [bp + 12]
-    mov dx, [bx]
-    cmp dl, '-'
-    jne nextchar
-    mov ax, 2; its negative
-    inc cx
-nextchar:
-    mov dx, [bx]
-    mov dh, 0
-    cmp dl, '0'
-    jl errorcode
-    cmp dl, '9'
-    jg errorcode
-    
-    sub dl, 30h
-    add ax, dx
-    inc bx
-    dec cx
-    cmp cx, 0
-    jne nextchar
-    jmp successcode1
-errorcode:
-    mov ax, 1
-    jmp exitfunc
-successcode1:
-    cmp ax, 2
-    je  itsnegative
-    mov bx, [bp + 16]
-    mov [bx], ax
-    mov ax, 0
-    jmp exitfunc
-itsnegative:
-    neg ax
-    mov bx, [bp + 16]
-    mov [bx], ax
-    mov ax, 0
-    jmp exitfunc
-exitfunc:
-    pop si
-    pop bp
-    pop dx
-    pop cx
-    pop bx
-    ret
-strToWord1 endp
-
 code ends
 end
