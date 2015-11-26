@@ -23,7 +23,7 @@ extrn writeToFile:near
 main:
     mov ax, data
     mov ds, ax
-    
+
     ;read WORKS JUST FINE
     lea ax, readedstring
     push ax
@@ -33,9 +33,9 @@ main:
     push ax
     mov ax, 1
     push ax
-    
+
     call readStr
-    
+
     ; str to word DOESNT WORK
     lea ax, wordrepresentation
     push ax
@@ -46,7 +46,7 @@ main:
     call strToWord
     cmp ax, 1
     je if_returned_false
-    
+
     ; word to str
     lea ax, writeoutput_size
     push ax
@@ -54,11 +54,11 @@ main:
     push ax
     lea ax, writeoutput
     push ax
-    
+
     call wordToChar
     cmp ax, 1
     je if_returned_false
-    
+
     ; write
     lea ax, outputfilepath
     push ax
@@ -68,9 +68,9 @@ main:
     push ax
     mov ax, writeoutput_size
     push ax
-    
+
     call writeToFile
-    
+
     cmp ax, 0
     je if_returned_true
     jne if_returned_false
@@ -84,7 +84,7 @@ if_returned_false:
 exit:
     mov ah, 09h
     int 21h
-    
+
     mov ax, 4C00h
     int 21h
 code ends
