@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -11,15 +13,18 @@ import java.util.Iterator;
  * Created by aleksandr on 25.11.15.
  */
 public class DrawPanel extends JPanel {
+    // COLORS definitions
     Color bieg = new Color(253, 245, 230);
     Color brown = new Color(160,82,45);
     Color konturcolor = new Color(160, 82, 45);
     Color lightgreen = new Color(123, 255, 162);
+    // end of COLORS
 
     private Float R = 3.0f;
     private int x;
     private int y;
     private boolean initialized = false;
+    public  double lastpointx = 0.0f, lastpointy = 0.0f;
     private int centerx;
     private int centery;
     private int heigth;
@@ -28,14 +33,15 @@ public class DrawPanel extends JPanel {
 
     private Kontur kontur;
     private HashSet<Punto> points = new HashSet<Punto>();
+    private JTextField coordsField;
 
-    public DrawPanel()
+    public DrawPanel(final JTextField coordsField_)
     {
         setBackground(bieg); // beige color
         setLayout(null);
+        coordsField = coordsField_;
 
         kontur = new Kontur(R);
-
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -95,6 +101,13 @@ public class DrawPanel extends JPanel {
             punto.setCurrentState(false);
         }
 
+        // to set jtextedit values
+        lastpointx = (x - centerx)/(float)step * 1.0f;
+        lastpointy = (centery - y)/(float)step * 1.0f;
+
+        coordsField.setText(new String("{" + new BigDecimal(punto.getX()).setScale(3, RoundingMode.UP).doubleValue() + ";" +
+                new BigDecimal(punto.getY()).setScale(3, RoundingMode.UP).doubleValue() + "}"));
+
         points.add(punto);
         repaint();
     }
@@ -111,6 +124,8 @@ public class DrawPanel extends JPanel {
             punto.setCurrentState(false);
         }
 
+        coordsField.setText(new String("{" + punto.getX() + ";" + punto.getY() + "}"));
+
         points.add(punto);
         repaint();
     }
@@ -126,7 +141,7 @@ public class DrawPanel extends JPanel {
         for(Iterator<Punto> i = points.iterator(); i.hasNext(); )
         {
             Punto p = i.next();
-            if((kontur.includesPunto(p) == 1) != p.getCurrentState())
+            if((p.getCurrentState() == true) && (kontur.includesPunto(p) == 0))
             {
                 needanimation = true;
             }
