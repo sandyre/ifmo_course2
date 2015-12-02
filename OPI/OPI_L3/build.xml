@@ -1,0 +1,80 @@
+<project name="PIP_L3">
+	<property file="build.prop"/>
+	<path id="application" location="${jar.dir}/${ant.project.name}.jar"/>
+
+	<target name="init">
+		
+	</target>
+
+	<target name="compile">
+		<delete dir="${build.dir}" failonerror="false"/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${class.dir}"/>
+		<mkdir dir="${class.dir}/junit"/>
+		<javac srcdir="${src.dir}" destdir="${class.dir}"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}" failonerror="false"/>
+	</target>
+
+	<target name="build" depends="init,clean,compile">
+		<mkdir dir="${jar.dir}"/>
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${class.dir}">
+				<manifest>
+						<attribute name="Main-Class" value="${main-class}"/>
+				</manifest>
+		</jar>
+	</target>
+
+	<target name="test" depends="build">
+		<mkdir dir="${class.dir}/tests"/>
+		<javac srcdir="${junit.dir}" destdir="${class.dir}/tests">
+			<classpath>
+				<pathelement location="${junit.dir}/junit.jar"/>
+				<pathelement location="${class.dir}"/>
+			</classpath>
+		</javac>
+		<junit printsummary="yes" showoutput="yes" filtertrace="false">
+			<classpath>
+				<pathelement location="${junit.dir}/junit.jar"/>
+				<pathelement location="${class.dir}"/>
+				<pathelement location="${class.dir}/tests"/>
+			</classpath>
+			<batchtest fork="yes">
+				<fileset dir="${junit.dir}" includes="*.java"/>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="doc" depends="build">
+		<delete dir="${doc.dir}" failonerror="false"/>
+		<mkdir dir="${doc.dir}"/>
+		<signjar jar="${jar.dir}/${ant.project.name}.jar"
+			alias="sandyre" keystore=".keystore" keypass="qwerty"
+			storepass="qwerty"
+			sigalg="MD5withRSA"
+			digestalg="MD5">
+			<path>
+				<fileset dir="${jar.dir}" includes="*.jar"/>
+			</path>
+		</signjar>
+		<signjar jar="${jar.dir}/${ant.project.name}.jar"
+			alias="sandyre" keystore=".keystore" keypass="qwerty"
+			storepass="qwerty"
+			sigalg="MD5withRSA"
+			digestalg="SHA1">
+			<path>
+				<fileset dir="${jar.dir}" includes="*.jar"/>
+			</path>
+		</signjar>
+		<javadoc destdir="${doc.dir}">
+			<fileset dir="${src.dir}"/>
+		</javadoc>
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" update="yes">
+			<fileset dir=".">
+				<include name="**/${doc.dir}/**"/>
+			</fileset>
+		</jar>
+	</target>
+</project>

@@ -1,0 +1,10 @@
+author = sandyre
+version = 0.1
+main-class = Task3
+
+src.dir   = src
+build.dir = build
+doc.dir   = doc
+jar.dir   = ${build.dir}/jar
+junit.dir = tests
+class.dir = ${build.dir}/classes
