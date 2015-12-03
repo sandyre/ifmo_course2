@@ -1,29 +1,93 @@
 <project name="PIP_L3">
 	<property file="build.prop"/>
 	<path id="application" location="${jar.dir}/${ant.project.name}.jar"/>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
 	<target name="init">
-		
 	</target>
+
+	<target name="full">
+		<antcall target="svnupdate"/>
+		<antcall target="clean"/>
+		<antcall target="build"/>
+		<antcall target="test"/>
+		<antcall target="doc"/>
+	</target>
+
+	<target name="svnupdate">
+		<exec executable="svn">
+			<arg value="update"/>
+			<arg value="src"/>
+		</exec>
+	</target>
+
+	<macrodef name="property-exp">
+    	<attribute name="name" />
+    	<attribute name="value" />
+    	<sequential>
+        	<script language="javascript">
+            	project.setProperty("@{name}", eval(@{value}));
+        	</script>
+    	</sequential>
+	</macrodef>
 
 	<target name="compile">
 		<delete dir="${build.dir}" failonerror="false"/>
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${class.dir}"/>
 		<mkdir dir="${class.dir}/junit"/>
-		<javac srcdir="${src.dir}" destdir="${class.dir}"/>
+		<trycatch>
+			<try>
+				<javac srcdir="${src.dir}" destdir="${class.dir}"/>
+			</try>
+
+			<catch>
+				<exec executable="svnversion" outputproperty="unstable_rev.number">
+					<arg value="${src.dir}"/>
+				</exec>
+				<property-exp name="unstable_rev.number" value="${unstable_rev.number} - 1"/>
+				<antcall target="history"/>
+			</catch>
+		</trycatch>
+		<if>
+			<equals arg1="${diff.needed}" arg2="true"/>
+				<then>
+					<exec executable="svnversion" outputproperty="stable_rev.number">
+						<arg value="${src.dir}"/>
+					</exec>
+					<antcall target="diff"/>
+				</then>
+		</if>
+	</target>
+
+	<target name="history">
+		<property name="diff.needed" value="true"/>
+		<exec executable="svn">
+			<arg line="update src -r ${unstable_rev.number}"/>
+		</exec>
+		<antcall target="compile"/>
+	</target>
+
+	<target name="diff">
+		<property-exp name="unstable_rev.number" value="${unstable_rev.number} + 1"/>
+		<exec executable="svn" output="${diff.file}_r${stable_rev.number}_to_r${unstable_rev.number}.txt">
+			<arg line="diff src -r ${stable_rev.number}:${unstable_rev.number}"/>
+		</exec>
 	</target>
 
 	<target name="clean">
 		<delete dir="${build.dir}" failonerror="false"/>
+		<delete>
+			<fileset dir="." includes="*diff*"/>
+		</delete>
 	</target>
 
-	<target name="build" depends="init,clean,compile">
+	<target name="build" depends="init,compile">
 		<mkdir dir="${jar.dir}"/>
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${class.dir}">
-				<manifest>
-						<attribute name="Main-Class" value="${main-class}"/>
-				</manifest>
+			<manifest>
+					<attribute name="Main-Class" value="${main-class}"/>
+			</manifest>
 		</jar>
 	</target>
 

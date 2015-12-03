@@ -8,3 +8,6 @@ doc.dir   = doc
 jar.dir   = ${build.dir}/jar
 junit.dir = tests
 class.dir = ${build.dir}/classes
+repository.link = file:///Users/aleksandr/ifmo_course2/OPI/SVN/
+src.link = file:///Users/aleksandr/ifmo_course2/OPI/OPI_L3/src
+diff.file = diff

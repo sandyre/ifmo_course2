@@ -1,0 +1,11 @@
+Index: src/Kontur.java
+===================================================================
+--- src/Kontur.java	(revision 1)
++++ src/Kontur.java	(revision 2)
+@@ -16,5 +16,5 @@
+ 
+         }
+ 
+-        private float R;
++        private float R;asdsad
+ }
