@@ -1,12 +1,20 @@
-<project name="PIP_L3">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="PIP_L3" default="full">
 	<property file="build.prop"/>
 	<path id="application" location="${jar.dir}/${ant.project.name}.jar"/>
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
-	<target name="init">
-	</target>
+    <path id="ivy.lib.path">
+        <fileset dir="." includes="ivy-2.4.0.jar"/>
+    </path>
+    
+    <taskdef resource="org/apache/ivy/ant/antlib.xml"
+        uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    
+    <target name="init">
+            <ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]"/>
+    </target>
 
-	<target name="full">
+	<target name="full" depends="init">
 		<antcall target="svnupdate"/>
 		<antcall target="clean"/>
 		<antcall target="build"/>
@@ -31,7 +39,7 @@
     	</sequential>
 	</macrodef>
 
-	<target name="compile">
+	<target name="compile" depends="init">
 		<delete dir="${build.dir}" failonerror="false"/>
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${class.dir}"/>
@@ -95,18 +103,19 @@
 		<mkdir dir="${class.dir}/tests"/>
 		<javac srcdir="${junit.dir}" destdir="${class.dir}/tests">
 			<classpath>
-				<pathelement location="${junit.dir}/junit.jar"/>
+                <fileset dir="lib/test" includes="*.jar"/>
 				<pathelement location="${class.dir}"/>
 			</classpath>
 		</javac>
 		<junit printsummary="yes" showoutput="yes" filtertrace="false">
 			<classpath>
-				<pathelement location="${junit.dir}/junit.jar"/>
+				<fileset dir="lib/test" includes="*.jar"/>
 				<pathelement location="${class.dir}"/>
 				<pathelement location="${class.dir}/tests"/>
 			</classpath>
 			<batchtest fork="yes">
-				<fileset dir="${junit.dir}" includes="*.java"/>
+				<fileset dir="lib/test" includes="*.jar"/>
+                <fileset dir="${junit.dir}" includes="*.java"/>
 			</batchtest>
 		</junit>
 	</target>
