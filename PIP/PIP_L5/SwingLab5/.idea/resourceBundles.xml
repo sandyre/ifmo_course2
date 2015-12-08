@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ResourceBundleManager">
+    <file url="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations.properties" />
+    <file url="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_pack_cz.properties" />
+    <file url="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_pack_ru.properties" />
+    <file url="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_ru.properties" />
+    <file url="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_sb.properties" />
+    <custom-resource-bundle>
+      <file value="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_pack_cz.properties" />
+      <file value="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_pack_ru.properties" />
+      <base-name>translations_pack</base-name>
+    </custom-resource-bundle>
+    <custom-resource-bundle>
+      <file value="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations.properties" />
+      <file value="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_ru.properties" />
+      <file value="file://$PROJECT_DIR$/src/ifmo/sandyre/lab4/translations_sb.properties" />
+      <base-name>translations</base-name>
+    </custom-resource-bundle>
+  </component>
+</project>

@@ -7,6 +7,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Created by aleksandr on 21.11.15.
@@ -29,9 +31,27 @@ public class MainWindow extends JPanel {
     private JSpinner spinner1;
     private JPanel DrawingPanel;
     private JButton addPointButton;
+    private JLabel setxlabel;
+    private JLabel setylabel;
+    private JLabel setrlabel;
+    private JLabel addedpntlabel;
+    private JButton RUButton;
 
     private int selectedx = 1, selectedy = 1;
     private double Radius = 3.0f;
+
+    String current_locale = "ru";
+    ResourceBundle lang_resources = ResourceBundle.getBundle("translations", new Locale("ru","RU")); // default lang is RU
+
+    public void ChangeInterfaceLanguage()
+    {
+        setxlabel.setText(lang_resources.getString("setx"));
+        setylabel.setText(lang_resources.getString("sety"));
+        setrlabel.setText(lang_resources.getString("setr"));
+        setxlabel.setText(lang_resources.getString("setx"));
+        addPointButton.setText(lang_resources.getString("addpnt"));
+        addedpntlabel.setText(lang_resources.getString("addedpnt"));
+    }
 
     public MainWindow()
     {
@@ -57,6 +77,9 @@ public class MainWindow extends JPanel {
 
         DrawPanel draw = new DrawPanel(textField1);
         DrawingPanel.add(draw);
+
+
+        ChangeInterfaceLanguage();
 
         list1.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -155,5 +178,22 @@ public class MainWindow extends JPanel {
             }
         });
 
+        RUButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(current_locale == "ru")
+                {
+                    lang_resources = ResourceBundle.getBundle("translations", new Locale("sr","SR"));
+                    current_locale = "sr";
+                    ChangeInterfaceLanguage();
+                }
+                else
+                {
+                    lang_resources = ResourceBundle.getBundle("translations", new Locale("ru","RU"));
+                    current_locale = "ru";
+                    ChangeInterfaceLanguage();
+                }
+            }
+        });
     }
 }

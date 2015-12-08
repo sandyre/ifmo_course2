@@ -154,7 +154,9 @@ public class DrawPanel extends JPanel {
 
     public void CheckAddedPoints()
     {
-        while(unapproved_points.size() != 0)
+        boolean server_shutdown = false;
+
+        while(unapproved_points.size() != 0 && server_shutdown == false)
         {
             QueueStruct qs = unapproved_points.peek();
             Punto p = qs.punto;
@@ -188,6 +190,7 @@ public class DrawPanel extends JPanel {
                     approved_points.add(p);
                     break;
                 case -1:
+                    server_shutdown = true;
                     System.out.println("SERVER NOT FOUND AGAIN! REALLY?!");
                     break;
                 default:
