@@ -14,11 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // available parameters for Functions
     // cubex, squarex,
     // they are defined in Interpolation.h
-    this->CreateOriginalGraph(Functions::squarex);
-    this->GenerateData(Functions::squarex, Functions::dsquarex);
-    this->DrawInterpolationLines();
-    this->viewDataTable(0);
-    this->viewLegend();
+
     ui->customplot->replot();
 }
 
@@ -144,32 +140,6 @@ void MainWindow::on_checkBox_4_stateChanged(int arg1)
 void MainWindow::on_comboBox_currentIndexChanged(int index)
 {
     ui->customplot->clearGraphs();
-    switch(index)
-    {
-        case 0:
-            GenerateData(Functions::squarex, Functions::dsquarex);
-            CreateOriginalGraph(Functions::squarex);
-            DrawInterpolationLines();
-            viewDataTable(0);
-            break;
-        case 1:
-            GenerateData(Functions::cubex, Functions::dcubex);
-            CreateOriginalGraph(Functions::cubex);
-            DrawInterpolationLines();
-            viewDataTable(0);
-            break;
-
-    }
-
-    if(ui->checkBox->isChecked())
-    {
-        ui->customplot->graph(1)->setVisible(true);
-        ui->customplot->graph(2)->setVisible(true);
-    }
-    if(ui->checkBox_4->isChecked())
-    {
-        ui->customplot->graph(0)->setVisible(true);
-    }
 
     ui->customplot->replot();
 }
@@ -203,6 +173,12 @@ void MainWindow::on_pushButton_clicked()
         inter.source_datasets[index].y[i] = ui->datatable->item(i, 1)->text().toDouble();
     }
 
+    for(auto i = 0; i < inter.source_datasets[index].lenght; i++)
+    {
+        ui->datatable->item(i, 0)->setText(QString::number(inter.source_datasets[index].x[i]));
+        ui->datatable->item(i, 1)->setText(QString::number(inter.source_datasets[index].y[i]));
+    }
+
     inter.calculated_datasets.clear();
     inter.CalculateDatasetsFromSources();
     ui->customplot->clearGraphs();
@@ -211,9 +187,14 @@ void MainWindow::on_pushButton_clicked()
     switch(function)
     {
         case 0:
+            CreateOriginalGraph(Functions::squarex);
+            DrawInterpolationLines();
+            break;
+        case 1:
             CreateOriginalGraph(Functions::cubex);
             DrawInterpolationLines();
             break;
+
     }
 
     // after repaint, check if graphics should be displayed
@@ -235,4 +216,55 @@ void MainWindow::on_pushButton_2_clicked()
     QString input_x = ui->lineEdit_2->text();
     double answer = inter.NewtonGetInterpolationResult(index,input_x.toDouble());
     ui->lineEdit->setText(QString::number(answer));
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    double accuracy = ui->line_edit_eps->text().toDouble();
+    double x0 = ui->line_edit_x0->text().toDouble();
+    double xn = ui->line_edit_xn->text().toDouble();
+    double start_step = ui->line_edit_start_step->text().toDouble();
+    double y0 = ui->line_edit_y0->text().toDouble();
+
+    if(xn < x0) std::swap(xn, x0);
+
+    if(accuracy == 0) accuracy = 0.1f;
+    if(start_step == 0) start_step = 0.5f;
+    ui->line_edit_eps->setText(QString::number(accuracy));
+    ui->line_edit_x0->setText(QString::number(x0));
+    ui->line_edit_xn->setText(QString::number(xn));
+    ui->line_edit_start_step->setText(QString::number(start_step));
+    ui->line_edit_y0->setText(QString::number(start_step));
+
+    inter.source_datasets.clear();
+    inter.calculated_datasets.clear();
+    ui->customplot->clearGraphs();
+
+    std::function<double(double)> fx;
+    std::function<double(double,double)> dfx;
+    int index = ui->comboBox->currentIndex();
+    switch(index)
+    {
+        case 0:
+            fx = Functions::squarex;
+            dfx = Functions::dsquarex;
+            CreateOriginalGraph(Functions::squarex);
+            break;
+        case 1:
+            fx = Functions::cubex;
+            dfx = Functions::dcubex;
+            CreateOriginalGraph(Functions::cubex);
+            break;
+    }
+
+    DataSet result = Milnes::Milnes_Method(x0, y0,
+                                           xn, accuracy, dfx, start_step);
+    inter.source_datasets.push_back(result);
+    inter.CalculateDatasetsFromSources();
+
+    DrawInterpolationLines();
+
+    viewDataTable(0);
+    this->viewLegend();
+    ui->customplot->replot();
 }

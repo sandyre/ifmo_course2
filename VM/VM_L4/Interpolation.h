@@ -60,11 +60,6 @@ public:
     {
         return 2*x;
     }
-
-    static double dexample(double x, double y)
-    {
-        return 1.6 * x + 0.5 * y;
-    }
 };
 
 class Interpolation

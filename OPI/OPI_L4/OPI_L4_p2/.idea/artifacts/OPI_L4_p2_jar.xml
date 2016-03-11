@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="OPI_L4_p2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/OPI_L4_p2_jar</output-path>
+    <root id="archive" name="OPI_L4_p2.jar">
+      <element id="module-output" name="OPI_L4_p2" />
+    </root>
+  </artifact>
+</component>

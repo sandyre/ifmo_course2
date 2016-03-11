@@ -47,7 +47,7 @@ DataSet Interpolation::NewtonGetDataSet(DataSet input_dataset)
     double step = 0.01;
     result.lenght = (std::abs(input_dataset.x[0]) + std::abs(input_dataset.x[input_dataset.lenght-1]))/step;
     double unknown_x = input_dataset.x[0];
-
+    result.lenght = std::floorl(result.lenght);
     double F, den, res;
     for(auto iter = 0; iter <= result.lenght; iter++)
     {
