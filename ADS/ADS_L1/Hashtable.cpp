@@ -13,7 +13,7 @@ bool Hashtable::insert( string element )
     return hashtable [ index ].insert( element );
 }
 
-bool Hashtable::contains( string element )
+size_t Hashtable::contains( string element )
 {
     if ( element.size() == 0 )
     {

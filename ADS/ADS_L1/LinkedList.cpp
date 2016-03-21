@@ -34,14 +34,14 @@ bool LinkedList::insert( string element )
     }
 }
 
-bool LinkedList::contains( string element )
+size_t LinkedList::contains( string element )
 
 {
     Node *pCurrentNode = root;
 
     for ( size_t index = 0; ; ++index )
     {
-        if( pCurrentNode->data == element ) return true;
+        if( pCurrentNode->data == element ) return index + 1;
 
         if( pCurrentNode->pNext != nullptr )
         {
@@ -49,5 +49,5 @@ bool LinkedList::contains( string element )
         }
     }
 
-    return false;
+    return 0;
 }

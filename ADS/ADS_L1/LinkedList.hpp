@@ -17,7 +17,7 @@ public:
 
     bool insert( string element );
     bool remove( string element );
-    bool contains( string element );
+    size_t contains( string element );
     size_t size() { return elements_count; }
 
 private:
