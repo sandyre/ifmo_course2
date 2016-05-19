@@ -9,5 +9,9 @@
 
 #include <stdio.h>
 #include <tchar.h>
+
 #include <Windows.h>
-#include <iostream>
+
+
+
+// TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
