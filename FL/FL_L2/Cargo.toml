@@ -1,0 +1,6 @@
+[package]
+name = "FL_L2"
+version = "0.1.0"
+authors = ["sandyre <aleksanteri@niuitmo.ru>"]
+
+[dependencies]
