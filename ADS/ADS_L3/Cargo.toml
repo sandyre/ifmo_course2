@@ -1,0 +1,8 @@
+[package]
+name = "Lessons"
+version = "0.1.0"
+authors = ["sandyre <aleksanteri@niuitmo.ru>"]
+
+[dependencies]
+rand = "*"
+time = "*"
