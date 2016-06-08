@@ -1,0 +1,8 @@
+[package]
+name = "ADS_L5"
+version = "0.1.0"
+authors = ["sandyre <aleksanteri@niuitmo.ru>"]
+
+[dependencies]
+time = "*"
+rand = "*"
