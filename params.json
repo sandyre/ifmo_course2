@@ -1,0 +1,6 @@
+{
+  "name": "drunkparty",
+  "tagline": "Озера!",
+  "body": "<html>\r\n<body>\r\n<div id=\"timer\"></div>\r\n</body>\r\n</html>\r\n<script language=\"JavaScript>\r\nfunction timer() {\r\n    var nowDate = new Date();\r\n    var achiveDate = new Date(2013,0,28,17,0,0); //Задаем дату, к которой будет осуществляться обратный отсчет\r\n    var result = (achiveDate - nowDate)+1000;\r\n    if (result < 0) {\r\n        var elmnt = document.getElementById('timer');\r\n        elmnt.innerHTML = ' - : - - : - - : - - ';\r\n        return undefined;\r\n    }\r\n    var seconds = Math.floor((result/1000)%60);\r\n    var minutes = Math.floor((result/1000/60)%60);\r\n    var hours = Math.floor((result/1000/60/60)%24);\r\n    var days = Math.floor(result/1000/60/60/24);\r\n    if (seconds < 10) seconds = '0' + seconds;\r\n    if (minutes < 10) minutes = '0' + minutes;\r\n    if (hours < 10) hours = '0' + hours;\r\n    var elmnt = document.getElementById('timer');\r\n    elmnt.innerHTML = days + ':' + hours + ':' + minutes + ':' + seconds;\r\n    setTimeout(timer, 1000);\r\n}\r\nwindow.onload = function() {\r\n    timer();\r\n}\r\n</script>",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
