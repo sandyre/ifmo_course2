@@ -15,11 +15,11 @@
     <script language="JavaScript">
             function timer() {
           var nowDate = new Date();
-          var achiveDate = new Date(2016,6,5,12,0,0); //Задаем дату, к которой будет осуществляться обратный отсчет
+          var achiveDate = new Date(2016,6,7,20,0,0); //Задаем дату, к которой будет осуществляться обратный отсчет
           var result = (achiveDate - nowDate)+1000;
           if (result < 0) {
               var elmnt = document.getElementById('timer');
-              elmnt.innerHTML = ' - : - - : - - : - - ';
+              elmnt.innerHTML = ' ЧАС X НАСТАААЛ! ';
               return undefined;
           }
           var seconds = Math.floor((result/1000)%60);
@@ -55,7 +55,7 @@
 
 <h1>НАБУХАЕМСЯ ЧЕРЕЗ:</h1>
 <div id="timer"></div>
-
+<img src="http://cdn.fishki.net/upload/post/201412/26/1365493/571822_3.jpg">
 <p>
 </p>
 
